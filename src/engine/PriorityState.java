@@ -1,10 +1,10 @@
 package engine;
 
-public class StateWithPriority implements Comparable<StateWithPriority> {
+public class PriorityState implements Comparable<PriorityState> {
     private State state;
     private int priority;
 
-    public StateWithPriority(State state, int priority) {
+    public PriorityState(State state, int priority) {
         this.state = state;
         this.priority = priority;
     }
@@ -14,7 +14,7 @@ public class StateWithPriority implements Comparable<StateWithPriority> {
     }
 
     @Override
-    public int compareTo(StateWithPriority o) {
+    public int compareTo(PriorityState o) {
         return Integer.compare(priority, o.priority);
     }
 }

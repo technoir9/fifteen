@@ -3,7 +3,7 @@ package strategies;
 import engine.MoveDirection;
 import engine.State;
 import engine.StateFactory;
-import engine.StateWithPriority;
+import engine.PriorityState;
 import strategies.heuristics.Heuristic;
 import writer.ExtraInformation;
 import writer.SolutionInformation;
@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.PriorityQueue;
 
-public class AStarPuzzleSolver implements PuzzleSolver {
+public class AStarStrategy implements Strategy {
     private ExtraInformation extraInformation;
     private SolutionInformation solutionInformation;
 
@@ -21,7 +21,7 @@ public class AStarPuzzleSolver implements PuzzleSolver {
     private StateFactory stateFactory;
     private Heuristic heuristic;
 
-    public AStarPuzzleSolver(State initialState, Heuristic heuristic) {
+    public AStarStrategy(State initialState, Heuristic heuristic) {
         currentState = initialState;
         this.heuristic = heuristic;
 
@@ -41,8 +41,8 @@ public class AStarPuzzleSolver implements PuzzleSolver {
         int visitedStates = 0;
         long startTimestamp = System.nanoTime();
 
-        PriorityQueue<StateWithPriority> priorityQueue = new PriorityQueue<>();
-        priorityQueue.add(new StateWithPriority(currentState, 0));
+        PriorityQueue<PriorityState> priorityQueue = new PriorityQueue<>();
+        priorityQueue.add(new PriorityState(currentState, 0));
 
         while (!priorityQueue.isEmpty()) {
             currentState = priorityQueue.poll().getState();
@@ -70,7 +70,7 @@ public class AStarPuzzleSolver implements PuzzleSolver {
 
             for (MoveDirection moveDirection : availableMoves) {
                 State stateAfterMove = stateFactory.getStateAfterMove(currentState, moveDirection);
-                priorityQueue.add(new StateWithPriority(stateAfterMove, heuristic.getValue(stateAfterMove, solvedState)));
+                priorityQueue.add(new PriorityState(stateAfterMove, heuristic.getValue(stateAfterMove, solvedState)));
             }
         }
     }

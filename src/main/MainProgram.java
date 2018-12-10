@@ -4,10 +4,10 @@ import engine.State;
 import engine.SearchOrder;
 import strategies.heuristics.HammingHeuristic;
 import strategies.heuristics.ManhattanHeuristic;
-import strategies.AStarPuzzleSolver;
-import strategies.BFSSolver;
-import strategies.DFSSolver;
-import strategies.PuzzleSolver;
+import strategies.AStarStrategy;
+import strategies.BFS;
+import strategies.DFS;
+import strategies.Strategy;
 import reader.DataReader;
 import writer.ExtraInformation;
 import writer.ExtraInformationSaver;
@@ -39,7 +39,7 @@ public class MainProgram {
 
             State inputState = readInputStateFromFile(inputFile);
 
-            PuzzleSolver puzzleSolver = null;
+            Strategy strategy = null;
 
             switch (selectedStrategy) {
                 case BFS_STRATEGY:
@@ -52,29 +52,31 @@ public class MainProgram {
                         System.out.println("Wrong parameter selectedStrategyExtra. Falling back to default move strategy." + e.getMessage());
                         searchStrategy = SearchOrder.Create("RDUL");
                     }
-                    puzzleSolver = (selectedStrategy == BFS_STRATEGY ?  new BFSSolver(inputState, searchStrategy) : new DFSSolver(inputState, searchStrategy));
+
+                    // TODO refactor using equals()
+                    strategy = (selectedStrategy == BFS_STRATEGY ?  new BFS(inputState, searchStrategy) : new DFS(inputState, searchStrategy));
                     break;
                 case A_STAR_STRATEGY:
                     if (selectedStrategyExtra.equals(HAMMING_HEURISTIC)) {
-                        puzzleSolver = new AStarPuzzleSolver(inputState, new HammingHeuristic());
+                        strategy = new AStarStrategy(inputState, new HammingHeuristic());
                     }
                     if (selectedStrategyExtra.equals(MANHATTAN_HEURISTIC)) {
-                        puzzleSolver = new AStarPuzzleSolver(inputState, new ManhattanHeuristic());
+                        strategy = new AStarStrategy(inputState, new ManhattanHeuristic());
                     }
                     break;
                 default:
                     System.out.println("Selected invalid strategy");
             }
 
-            if (puzzleSolver == null) {
-                System.out.println("puzzleSolver is null");
+            if (strategy == null) {
+                System.out.println("strategy is null");
                 return;
             }
 
-            puzzleSolver.solve();
+            strategy.solve();
 
-            saveSolutionInformation(outputSolutionFile, puzzleSolver.getSolutionInformation());
-            saveExtraInformation(outputExtraFile, puzzleSolver.getExtraInformation());
+            saveSolutionInformation(outputSolutionFile, strategy.getSolutionInformation());
+            saveExtraInformation(outputExtraFile, strategy.getExtraInformation());
 
             System.out.println("solved");
         } else {

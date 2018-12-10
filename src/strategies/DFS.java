@@ -9,7 +9,7 @@ import writer.SolutionInformation;
 
 import java.util.*;
 
-public class DFSSolver implements PuzzleSolver {
+public class DFS implements Strategy {
     private ExtraInformation extraInformation;
     private SolutionInformation solutionInformation;
 
@@ -22,7 +22,7 @@ public class DFSSolver implements PuzzleSolver {
     protected StateFactory stateFactory;
     protected int maxDepth;
 
-    public DFSSolver(State initialState, SearchOrder searchOrder) {
+    public DFS(State initialState, SearchOrder searchOrder) {
         stateFactory = new StateFactory(initialState.getDimensionX(), initialState.getDimensionY());
         goalState = stateFactory.getSolvedState();
         currentState = initialState;

@@ -3,7 +3,7 @@ package strategies;
 import writer.ExtraInformation;
 import writer.SolutionInformation;
 
-public interface PuzzleSolver {
+public interface Strategy {
     void solve();
 
     ExtraInformation getExtraInformation();
