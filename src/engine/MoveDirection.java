@@ -1,7 +1,11 @@
 package engine;
 
 public enum MoveDirection {
-    LEFT("L"), RIGHT("R"), UP("U"), DOWN("D"), NO_MOVE("NO");
+    DOWN("D"),
+    LEFT("L"),
+    NONE("NO"),
+    RIGHT("R"),
+    UP("U");
 
     private final String directionShort;
 

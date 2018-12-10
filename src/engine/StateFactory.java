@@ -20,7 +20,7 @@ public class StateFactory {
             solvedStateArray[i] = (byte) (i + 1);
         }
 
-        return new State(dimensionX, dimensionY, solvedStateArray, null, MoveDirection.NO_MOVE, 0);
+        return new State(dimensionX, dimensionY, solvedStateArray, null, MoveDirection.NONE, 0);
     }
 
     public State getStateAfterMove(State currentState, MoveDirection moveDirection) {

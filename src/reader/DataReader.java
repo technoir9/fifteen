@@ -35,7 +35,7 @@ public class DataReader {
                 }
             }
 
-            inputState = new State(dimensionX, dimensionY, initialValues, null, MoveDirection.NO_MOVE, 0);
+            inputState = new State(dimensionX, dimensionY, initialValues, null, MoveDirection.NONE, 0);
         } catch (FileNotFoundException e) {
             System.out.println("Can't find input file!");
         } catch (IOException e) {
