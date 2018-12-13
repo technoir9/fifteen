@@ -16,8 +16,8 @@ public class DFS implements Strategy {
     protected State goalState;
     protected State currentState;
     protected SearchOrder searchStrategy;
-    protected Stack<State> listOfOpenStates;
-    protected Set<State> listOfClosedStates;
+    protected Stack<State> frontierList;
+    protected Set<State> exploredList;
     protected LinkedList<MoveDirection> directions;
     protected StateFactory stateFactory;
     protected int maxDepth;
@@ -26,8 +26,8 @@ public class DFS implements Strategy {
         stateFactory = new StateFactory(initialState.getDimensionX(), initialState.getDimensionY());
         goalState = stateFactory.getSolvedState();
         currentState = initialState;
-        listOfOpenStates = new Stack<>();
-        listOfClosedStates = new LinkedHashSet<>();
+        frontierList = new Stack<>();
+        exploredList = new LinkedHashSet<>();
         directions = new LinkedList<>();
         searchStrategy = searchOrder;
         maxDepth = 1;
@@ -42,24 +42,26 @@ public class DFS implements Strategy {
 
     @Override
     public void solve() {
+        System.out.println("DFS");
         int visitedStates = 0;
         long startTimestamp = System.nanoTime();
 
-        listOfOpenStates.push(currentState);
+        frontierList.push(currentState);
         visitedStates++;
 
-        while (!listOfOpenStates.isEmpty()) {
-            currentState = listOfOpenStates.pop();
-            listOfClosedStates.add(currentState);
+        while (!frontierList.isEmpty()) {
+            currentState = frontierList.pop();
+            exploredList.add(currentState);
 
             if (isSolved()) {
+                // Save the information about the solution
                 long endTimestamp = System.nanoTime();
 
                 solutionInformation.setSolutionLength(currentState.getDepthLevel());
                 solutionInformation.setSolutionMoves(currentState.getPath());
 
                 extraInformation.setVisitedStates(visitedStates);
-                extraInformation.setProcessedStates(listOfClosedStates.size());
+                extraInformation.setProcessedStates(exploredList.size());
                 extraInformation.setMaxRecursionDepth(maxDepth);
                 extraInformation.setSolutionLength(currentState.getDepthLevel());
 
@@ -69,13 +71,14 @@ public class DFS implements Strategy {
             }
 
             for (State neighbor : stateFactory.getNeighbors(currentState, searchStrategy)) {
-                if(currentState.getDepthLevel() > 20)
+                if(currentState.getDepthLevel() > 25)
                     break;
                 if(currentState.getDepthLevel() > maxDepth)
                     maxDepth = currentState.getDepthLevel();
-                if (!(listOfOpenStates.contains(neighbor) || listOfClosedStates.contains(neighbor))) {
+//                if (!(frontierList.contains(neighbor) || exploredList.contains(neighbor))) {
+                if (!(frontierList.contains(neighbor) && !(exploredList.contains(neighbor)))) {
                     visitedStates++;
-                    listOfOpenStates.push(neighbor);
+                    frontierList.push(neighbor);
                 }
             }
         }

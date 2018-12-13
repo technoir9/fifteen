@@ -53,8 +53,11 @@ public class MainProgram {
                         searchStrategy = SearchOrder.Create("RDUL");
                     }
 
-                    // TODO refactor using equals()
-                    strategy = (selectedStrategy == BFS_STRATEGY ?  new BFS(inputState, searchStrategy) : new DFS(inputState, searchStrategy));
+                    if (selectedStrategy.equals(BFS_STRATEGY)) {
+                        strategy = new BFS(inputState, searchStrategy);
+                    } else {
+                        strategy = new DFS(inputState, searchStrategy);
+                    }
                     break;
                 case A_STAR_STRATEGY:
                     if (selectedStrategyExtra.equals(HAMMING_HEURISTIC)) {

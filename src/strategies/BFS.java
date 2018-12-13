@@ -16,8 +16,8 @@ public class BFS implements Strategy {
     protected State goalState;
     protected State currentState;
     protected SearchOrder searchStrategy;
-    protected LinkedList<State> listOfOpenStates;
-    protected Set<State> listOfClosedStates;
+    protected LinkedList<State> frontierList;
+    protected Set<State> exploredList;
     protected LinkedList<MoveDirection> directions;
     protected StateFactory stateFactory;
     protected int maxDepth;
@@ -26,8 +26,8 @@ public class BFS implements Strategy {
         stateFactory = new StateFactory(initialState.getDimensionX(), initialState.getDimensionY());
         goalState = stateFactory.getSolvedState();
         currentState = initialState;
-        listOfOpenStates = new LinkedList<>();
-        listOfClosedStates = new LinkedHashSet<>();
+        frontierList = new LinkedList<>();
+        exploredList = new LinkedHashSet<>();
         directions = new LinkedList<>();
         searchStrategy = searchOrder;
         maxDepth = 1;
@@ -42,24 +42,26 @@ public class BFS implements Strategy {
 
     @Override
     public void solve() {
+        System.out.println("BFS");
         int visitedStates = 0;
         long startTimestamp = System.nanoTime();
 
-        listOfOpenStates.addFirst(currentState);
+        frontierList.addFirst(currentState);
         visitedStates++;
 
-        while (!listOfOpenStates.isEmpty()) {
-            currentState = listOfOpenStates.pollFirst();
-            listOfClosedStates.add(currentState);
+        while (!frontierList.isEmpty()) {
+            currentState = frontierList.pollFirst();
+            exploredList.add(currentState);
 
             if (isSolved()) {
+                // Save the information about the solution
                 long endTimestamp = System.nanoTime();
 
                 solutionInformation.setSolutionLength(currentState.getDepthLevel());
                 solutionInformation.setSolutionMoves(currentState.getPath());
 
                 extraInformation.setVisitedStates(visitedStates);
-                extraInformation.setProcessedStates(listOfClosedStates.size());
+                extraInformation.setProcessedStates(exploredList.size());
                 extraInformation.setMaxRecursionDepth(maxDepth);
                 extraInformation.setSolutionLength(currentState.getDepthLevel());
 
@@ -69,13 +71,15 @@ public class BFS implements Strategy {
             }
 
             for (State neighbor : stateFactory.getNeighbors(currentState, searchStrategy)) {
-                if(currentState.getDepthLevel() > 20)
+                // TODO check what happens when you remove max depth
+                if(currentState.getDepthLevel() > 25)
                     break;
-                if (!(listOfOpenStates.contains(neighbor) || listOfClosedStates.contains(neighbor))) {
+//                if (!(frontierList.contains(neighbor) || exploredList.contains(neighbor))) {
+                if (!(frontierList.contains(neighbor) && !(exploredList.contains(neighbor)))) {
                     if(currentState.getDepthLevel() > maxDepth)
                         maxDepth = currentState.getDepthLevel();
                     visitedStates++;
-                    listOfOpenStates.addLast(neighbor);
+                    frontierList.addLast(neighbor);
                 }
             }
         }

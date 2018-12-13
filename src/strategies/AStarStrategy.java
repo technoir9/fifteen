@@ -45,11 +45,13 @@ public class AStarStrategy implements Strategy {
         priorityQueue.add(new PriorityState(currentState, 0));
 
         while (!priorityQueue.isEmpty()) {
+            // Get the state with highest priority
             currentState = priorityQueue.poll().getState();
 
             visitedStates++;
 
             if (isSolved()) {
+                // Save the information about the solution
                 long endTimestamp = System.nanoTime();
 
                 solutionInformation.setSolutionLength(currentState.getDepthLevel());
@@ -62,8 +64,7 @@ public class AStarStrategy implements Strategy {
 
                 double computationTime = (endTimestamp - startTimestamp) / 100000.0;
                 extraInformation.setComputationTime(computationTime);
-
-                return;
+                return; // Success
             }
 
             List<MoveDirection> availableMoves = currentState.getAvailableMoves();
