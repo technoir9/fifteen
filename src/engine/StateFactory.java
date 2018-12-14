@@ -1,9 +1,6 @@
 package engine;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 public class StateFactory {
     private byte dimensionX;
@@ -56,6 +53,19 @@ public class StateFactory {
             neighbors.add(neighbor);
         }
         return neighbors;
+    }
+
+    public Queue<State> reverseNeighbours(Queue<State> neighboursToReverse){
+
+        Stack<State> s = new Stack();
+        while(!neighboursToReverse.isEmpty()){
+            s.push(neighboursToReverse.poll());
+        }
+
+        while(!s.isEmpty()){
+            neighboursToReverse.add(s.pop());
+        }
+        return neighboursToReverse;
     }
 
     private byte[] swap(byte[] array, byte index1, byte index2) {

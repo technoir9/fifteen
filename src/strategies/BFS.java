@@ -75,7 +75,7 @@ public class BFS implements Strategy {
                 if(currentState.getDepthLevel() > 25)
                     break;
 //                if (!(frontierList.contains(neighbor) || exploredList.contains(neighbor))) {
-                if (!(frontierList.contains(neighbor) && !(exploredList.contains(neighbor)))) {
+                if ((!(frontierList.contains(neighbor))) && (!(exploredList.contains(neighbor)))) {
                     if(currentState.getDepthLevel() > maxDepth)
                         maxDepth = currentState.getDepthLevel();
                     visitedStates++;

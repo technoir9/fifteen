@@ -70,13 +70,13 @@ public class DFS implements Strategy {
                 return; // Success
             }
 
-            for (State neighbor : stateFactory.getNeighbors(currentState, searchStrategy)) {
+            for (State neighbor : stateFactory.reverseNeighbours(stateFactory.getNeighbors(currentState, searchStrategy))) {
                 if(currentState.getDepthLevel() > 25)
                     break;
                 if(currentState.getDepthLevel() > maxDepth)
                     maxDepth = currentState.getDepthLevel();
 //                if (!(frontierList.contains(neighbor) || exploredList.contains(neighbor))) {
-                if (!(frontierList.contains(neighbor) && !(exploredList.contains(neighbor)))) {
+                if ((!(frontierList.contains(neighbor))) && (!(exploredList.contains(neighbor)))) {
                     visitedStates++;
                     frontierList.push(neighbor);
                 }
